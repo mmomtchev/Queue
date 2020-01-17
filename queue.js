@@ -68,32 +68,37 @@ class Queue {
 		me.promise = new Promise((resolve, reject) => {
 			me.resolve = resolve;
 		});
+		/* Who is the last one in the line? */
+		const lastWaiting = this.getLastWaiting(this.queueWaiting);
+		/* Get in the line */
+		this.queueWaiting[priority].push(me);
+		if (lastWaiting)
+			/* Wait on the last one's promise */
+			await lastWaiting.promise;
 		/* Are we allowed to run?
 		* No, if there are already maxConcurrent running tasks
-	    * And no, if there are higher priority tasks waiting
-	    */
+		* And no, if there are higher priority tasks waiting
+		*/
 		while (this.queueRunning.length >= this.maxConcurrent || this.getFirstPrioirityWaiting() < priority) {
-			/* Who is the last one in the line? */
-			const lastWaiting = this.getLastWaiting(this.queueWaiting);
-			/* Get in the line */
-			this.queueWaiting[priority].push(me);
-			if (lastWaiting)
-				/* Wait on the last one's promise */
-				await lastWaiting.promise;
-			else
-				/* No one is waiting, wait on all the running promises */
-				await Promise.race(this.queueRunning.map(x => x.promise));
-			/* Get off the line and try to run */
-			this.dequeue(hash, this.queueWaiting[priority]);
+			/* the guy who was the last one when we arrived is now running, we are one of the next */
+			/* wait on all the running promises */
+			await Promise.race(this.queueRunning.map(x => x.promise));
 		}
+		/* Get off the line and try to run */
+		this.dequeue(hash, this.queueWaiting[priority]);
 		/* Wait if it is too soon */
 		if (Date.now() - this.lastRun < this.minCycle)
 			await new Promise((resolve, reject) => setTimeout(resolve, this.minCycle - Date.now() + this.lastRun));
-		/* We are allowed to run */
+		/* We are allowed to run, signal to everyone who's waiting on us to advance */
+		me.resolve();
+		/* Create a new promise for everyone to wait */
+		me.promise = new Promise((resolve, reject) => {
+			me.resolve = resolve;
+		});
 		this.queueRunning.push(me);
 	}
 }
 
 module.exports = {
 	Queue
-}
+};
