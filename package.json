@@ -1,0 +1,26 @@
+{
+  "name": "async-await-queue",
+  "version": "1.0.0",
+  "description": "async/await simple priority queues",
+  "main": "queue.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mmomtchev/Queue.git"
+  },
+  "keywords": [
+    "priority",
+    "queue",
+    "async",
+    "await",
+    "Promise"
+  ],
+  "author": "Momtchil Momtchev <momtchil@momtchev.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/mmomtchev/Queue/issues"
+  },
+  "homepage": "https://github.com/mmomtchev/Queue"
+}
