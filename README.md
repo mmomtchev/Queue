@@ -14,7 +14,7 @@ The language specification doesn't make it clear if this is allowed or not, but 
 
 Example use:
 
-`
+```
 const Queue = require('./queue').Queue;
 /* No more than 2 concurrent tasks with
  * at least 100ms between two tasks
@@ -36,4 +36,4 @@ async function downloadTheUniverse() {
 	/* Signal that we are finished */
 	myq.end("MYSOCSECNUM");
 }
-`
+```
