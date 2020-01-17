@@ -15,7 +15,7 @@ The language specification doesn't make it clear if this is allowed or not, but 
 Example use:
 
 ```
-const Queue = require('./queue').Queue;
+const Queue = require('./queue');
 /* No more than 2 concurrent tasks with
  * at least 100ms between two tasks
  */
@@ -27,13 +27,15 @@ async function downloadTheUniverse() {
 	/* The third call will wait for the previous two to complete
 	 * plus the time needed to make this at least 100ms
 	 * after the second call
+         * The first argument needs to be unique for every
+         * task on the queue
 	 */
-	await myq.wait("MYSOCSECNUM", myPriority);
+	await myq.wait("MyUniqueSocSecNum", myPriority);
 
 	/* Do your expensive task */
 	downloadTheInternet();
 
 	/* Signal that we are finished */
-	myq.end("MYSOCSECNUM");
+	myq.end("MyUniqueSocSecNum");
 }
 ```
