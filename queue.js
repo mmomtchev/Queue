@@ -99,10 +99,10 @@ class Queue {
 		me.promise = new Promise((resolve, reject) => {
 			me.resolve = resolve;
 		});
+		this.lastRun = Date.now();
 		this.queueRunning.push(me);
 	}
 }
 
-module.exports = {
-	Queue
-};
+module.exports = Queue;
+
