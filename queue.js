@@ -82,13 +82,11 @@ class Queue {
 		*/
 		while (this.queueRunning.length >= this.maxConcurrent || this.getFirstPrioirityWaiting() < priority) {
 			/* the guy who was the last one when we arrived is now running, we are one of the next */
-			if (this.getFirstPrioirityWaiting() < priority) {
+			const lastWaiting = this.getLastWaiting();
+			if (this.getFirstPrioirityWaiting() < priority && lastWaiting !== undefined) {
 				/* Special case, someone with higher priority got in front of us
 				 * wait on him, instead of waking everyone
 				 */
-				const lastWaiting = this.getLastWaiting();
-				if (lastWaiting === undefined)
-					break;
 				await lastWaiting.promise;
 			}
 			else {

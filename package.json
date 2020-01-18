@@ -1,6 +1,6 @@
 {
   "name": "async-await-queue",
-  "version": "1.0.1",
+  "version": "1.0.3",
   "description": "async/await simple priority queues",
   "main": "queue.js",
   "scripts": {
