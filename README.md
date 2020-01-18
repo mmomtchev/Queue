@@ -12,10 +12,14 @@ The queues keep references to the Promise resolve() function and resolve it from
 This is a very unusual use of Promises that I find interesting.
 The language specification doesn't make it clear if this is allowed or not, but it seems to work very well.
 
+Install
+
+`npm install --save async-await-queue`
+
 Example use:
 
 ```
-const Queue = require('./queue');
+const Queue = require('async-await-queue');
 /* No more than 2 concurrent tasks with
  * at least 100ms between two tasks
  */
