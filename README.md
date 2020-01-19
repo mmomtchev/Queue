@@ -35,12 +35,15 @@ async function downloadTheUniverse() {
          * task on the queue
 	 */
 	const me = Symbol();
-	await myq.wait(me, myPriority);
+    try {
+	    await myq.wait(me, myPriority);
 
-	/* Do your expensive task */
-	downloadTheInternet();
+	    /* Do your expensive task */
+	    downloadTheInternet();
 
-	/* Signal that we are finished */
+    } catch (e) {}
+    /* Signal that we are finished */
+    /* Do not forget to manage the exceptions! */
 	myq.end(me);
 }
 ```
