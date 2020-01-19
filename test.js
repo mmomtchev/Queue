@@ -1,4 +1,5 @@
-const Queue = require('async-await-queue');
+const Queue = require('./queue');
+
 
 async function test(id, pri) {
 	await q.wait(id, pri);
@@ -6,15 +7,21 @@ async function test(id, pri) {
 	setTimeout(() => {
 		console.log(id);
 		q.end(id);
+		tests--;
 	}, 100);
 }
 
-setTimeout(() => { }, 6000);
-
 let q = new Queue(2, 1000);
 
-test(1, 5);
-test(2, 5);
-test(3, 5);
-test(4, 5);
-test(5, 0);
+let tests = 5;
+test(Symbol(1), 5);
+test(Symbol(2), 5);
+test(Symbol(3), 5);
+test(Symbol(4), 5);
+test(Symbol(5), 0);
+
+function wait() {
+	if (tests > 0)
+		setTimeout(wait, 1000);
+}
+wait();

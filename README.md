@@ -34,12 +34,13 @@ async function downloadTheUniverse() {
          * The first argument needs to be unique for every
          * task on the queue
 	 */
-	await myq.wait("MyUniqueSocSecNum", myPriority);
+	const me = Symbol();
+	await myq.wait(me, myPriority);
 
 	/* Do your expensive task */
 	downloadTheInternet();
 
 	/* Signal that we are finished */
-	myq.end("MyUniqueSocSecNum");
+	myq.end(me);
 }
 ```
