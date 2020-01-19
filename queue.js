@@ -13,14 +13,6 @@ class Queue {
 	}
 
 	/** @private */
-	getLastWaiting(prio) {
-		for (let p of Object.keys(this.queueWaiting).sort((a, b) => b - a))
-			if (this.queueWaiting[p] !== undefined && this.queueWaiting[p].length > 0 && p < prio)
-				return this.queueWaiting[p][this.queueWaiting[p].length - 1];
-		return undefined;
-	}
-
-	/** @private */
 	dequeue(hash, _q) {
 		const q = _q || this.queueRunning;
 		const idx = q.findIndex(x => x.hash === hash);
@@ -32,11 +24,11 @@ class Queue {
 	}
 
 	/** @private */
-	getFirstPrioirityWaiting() {
+	getFirstWaiting() {
 		for (let p of Object.keys(this.queueWaiting).sort((a, b) => a - b))
 			if (this.queueWaiting[p] !== undefined && this.queueWaiting[p].length > 0)
-				return p;
-		return Infinity;
+				return this.queueWaiting[p];
+		return undefined;
 	}
 
 	/**
@@ -44,9 +36,13 @@ class Queue {
 	 * @param {*} hash Unique hash identifying the task
 	 */
 	end(hash) {
-		const me = this.dequeue(hash, this.queueRunning);
-		/* Resolve my promise to wake up the tasks waiting on me */
-		me.resolve();
+		this.dequeue(hash, this.queueRunning);
+		/* Choose the next task to run and unblock its promise */
+		const q = this.getFirstWaiting();
+		if (q !== undefined) {
+			const next = q.shift();
+			next.resolve();
+		}
 	}
 
 	/**
@@ -62,45 +58,19 @@ class Queue {
 		if (this.queueWaiting[priority] == undefined)
 			this.queueWaiting[priority] = [];
 
-		/* Tasks waiting on us will be waiting on this promise
-		 * We will keep a reference on the resolve function
-		 * and resolve it from the outside */
-		me.promise = new Promise((resolve, reject) => {
-			me.resolve = resolve;
-		});
-		/* Get in the line */
-		this.queueWaiting[priority].push(me);
-
-		/* Are we allowed to run?
-		* No, if there are already maxConcurrent running tasks
-		* - then wait on everyone running
-		* And no, if there are higher priority tasks waiting
-		* - then wait on the last higher priority task
-		*/
-		while (this.queueRunning.length >= this.maxConcurrent || this.getFirstPrioirityWaiting() < priority) {
-			const lastWaiting = this.getLastWaiting(priority);
-			if (this.getFirstPrioirityWaiting() < priority && lastWaiting !== undefined) {
-				await lastWaiting.promise;
-			}
-			else if (this.queueRunning.length > 0) {
-				await Promise.race(this.queueRunning.map(x => x.promise));
-			}
-			else {
-				/* yield the cpu */
-				await Promise.resolve(undefined);
-			}
+		/* Are we allowed to run? */
+		if (this.queueRunning.length >= this.maxConcurrent) {
+			/* This promise will be unlocked from the outside */
+			me.promise = new Promise((resolve, reject) => {
+				me.resolve = resolve;
+			});
+			/* Get in the line */
+			this.queueWaiting[priority].push(me);
+			await me.promise;
 		}
-		/* Get off the line and try to run */
-		this.dequeue(hash, this.queueWaiting[priority]);
-		/* We are allowed to run, signal to everyone who's waiting on us to advance */
-		me.resolve();
 
-		/* Create a new promise for everyone to wait while we are running */
-		me.promise = new Promise((resolve, reject) => {
-			me.resolve = resolve;
-		});
 		this.queueRunning.push(me);
-		/* Wait if it is too soon */
+		/* Wait while keeping the running lock if it is too soon */
 		while (Date.now() - this.lastRun < this.minCycle) {
 			await new Promise((resolve, reject) => setTimeout(resolve, this.minCycle - Date.now() + this.lastRun));
 		}

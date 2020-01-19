@@ -8,11 +8,12 @@ async function test(id, pri) {
 		console.log(id);
 		q.end(id);
 		tests--;
-	}, 100);
+	}, 1000);
 }
 
-let q = new Queue(2, 1000);
+let q = new Queue(2, 500);
 
+/* The correct order of execution should be 1, 2, 5, 3, 4 */
 let tests = 5;
 test(Symbol(1), 5);
 test(Symbol(2), 5);
