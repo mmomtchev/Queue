@@ -49,7 +49,7 @@ async function downloadTheUniverse() {
         
     } finally {
         /* Signal that we are finished */
-        /* Do not forget to manage the exceptions! */
+        /* Do not forget to handle the exceptions! */
         myq.end(me);
     }
 }
