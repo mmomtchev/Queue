@@ -32,23 +32,25 @@ myq = new Queue(2, 100);
 ....
 
 async function downloadTheUniverse() {
-	/* The third call will wait for the previous two to complete
-	 * plus the time needed to make this at least 100ms
-	 * after the second call
-         * The first argument needs to be unique for every
-         * task on the queue
-	 */
-	const me = Symbol();
+    /* The third call will wait for the previous two to complete
+        * plus the time needed to make this at least 100ms
+        * after the second call
+            * The first argument needs to be unique for every
+            * task on the queue
+        */
+    const me = Symbol();
+    await myq.wait(me, myPriority);
+
     try {
-	    await myq.wait(me, myPriority);
+        /* Do your expensive task */
+        downloadTheInternet();
 
-	    /* Do your expensive task */
-	    downloadTheInternet();
-
-    } catch (e) {} finally {
-		/* Signal that we are finished */
-		/* Do not forget to manage the exceptions! */
-		myq.end(me);
-	}
+    } catch (e) {
+        
+    } finally {
+        /* Signal that we are finished */
+        /* Do not forget to manage the exceptions! */
+        myq.end(me);
+    }
 }
 ```
