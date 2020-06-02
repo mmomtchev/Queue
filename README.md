@@ -21,7 +21,7 @@ Install:
 
 `npm install --save async-await-queue`
 
-Example use:
+Typical usae case:
 
 ```js
 const Queue = require('async-await-queue');
@@ -33,29 +33,57 @@ myq = new Queue(2, 100);
 ....
 
 const myPriority = -1;
-async function downloadTheUniverse() {
-	/* The third call will wait for the previous two to complete
-	* plus the time needed to make this at least 100ms
-	* after the second call
-	* The first argument needs to be unique for every
-	* task on the queue
-	*/
-	const me = Symbol();
-	await myq.wait(me, myPriority);
+/* This function will launch tasks and will
+ * wait for them to be scheduled
+ */
+async function downloadTheInternet() {
+	let p;
+	for (let site of Internet) {
+		/* The third call will wait for the previous two to complete
+		* plus the time needed to make this at least 100ms
+		* after the second call
+		* The first argument needs to be unique for every
+		* task on the queue
+		*/
+		const me = Symbol();
+		/* We wait in the line here */
+		await myq.wait(me, myPriority);
 
-	try {
 		/* Do your expensive async task here
 		* Queue will schedule it at
 		* no more than 2 parallel running requests
 		* launched at least 100ms apart
 		*/
-		downloadTheInternet();
-	} catch (e) {
-		
-	} finally {
-		/* Signal that we are finished */
-		/* Do not forget to handle the exceptions! */
-		myq.end(me);
+		p = download(site)
+			/* Signal that we are finished */
+			/* Do not forget to handle the exceptions! */
+			.catch((e) => console.error(e))
+			.then(() => myq.end(me));
 	}
+	return await p;
+}
+
+
+/* This function will schedule all the taks and
+ * then will return immediately a single Promise
+ * that can be awaited upon
+ */
+async function downloadTheInternet() {
+	const q = [];
+	for (let site of Internet) {
+		/* The third call will wait for the previous two to complete
+		* plus the time needed to make this at least 100ms
+		* after the second call
+		* The first argument needs to be unique for every
+		* task on the queue
+		*/
+		const me = Symbol();
+		q.push(myq.wait(me, myPriority)
+			.then(() => download(site))
+			.catch((e) => console.error(e))
+			.then(() => myq.end(me)));
+		
+	}
+	return Promise.all(q);
 }
 ```
