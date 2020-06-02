@@ -33,6 +33,8 @@ myq = new Queue(2, 100);
 ....
 
 const myPriority = -1;
+
+
 /* This function will launch tasks and will
  * wait for them to be scheduled
  */
@@ -61,6 +63,38 @@ async function downloadTheInternet() {
 			.then(() => myq.end(me));
 	}
 	return await p;
+}
+
+
+/* This function will execute a single task
+ * waiting for its place in the queue
+ */
+async function downloadTheInternet() {
+	let p;
+	/* The third call will wait for the previous two to complete
+	* plus the time needed to make this at least 100ms
+	* after the second call
+	* The first argument needs to be unique for every
+	* task on the queue
+	*/
+	const me = Symbol();
+	/* We wait in the line here */
+	await myq.wait(me, myPriority);
+
+	/* Do your expensive async task here
+	* Queue will schedule it at
+	* no more than 2 parallel running requests
+	* launched at least 100ms apart
+	*/
+	try {
+		await download(site);
+	} catch () {
+		console.error(e);
+	} finally {
+		/* Signal that we are finished */
+		/* Do not forget to handle the exceptions! */
+		myq.end(me);
+	}
 }
 
 
