@@ -13,7 +13,7 @@ class Queue {
 	}
 
 	/** @private */
-	dequeue(hash, _q) {
+	dequeue(hash) {
 		const q = this.queueRunning;
 		const idx = q.findIndex(x => x.hash === hash);
 		if (idx == -1)

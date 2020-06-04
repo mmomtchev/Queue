@@ -34,7 +34,7 @@ const Queue = require('async-await-queue');
 /* No more than 2 concurrent tasks with
  * at least 100ms between two tasks
  */
-myq = new Queue(2, 100);
+const myq = new Queue(2, 100);
 
 ....
 
