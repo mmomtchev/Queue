@@ -21,11 +21,13 @@ This is a very unusual use of Promises to implement locks that I find interestin
 The language specification doesn't make it clear if this is allowed or not, but it seems to work very well.
 It works both in the browser and in Node.js.
 
-Install:
+# Install
 
 `npm install --save async-await-queue`
 
-Typical usae case:
+# Typical usage
+
+(or read the [jsdoc](https://mmomtchev.github.io/Queue/))
 
 ```js
 const Queue = require('async-await-queue');
