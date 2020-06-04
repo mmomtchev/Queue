@@ -14,7 +14,7 @@ class Queue {
 
 	/** @private */
 	dequeue(hash, _q) {
-		const q = _q || this.queueRunning;
+		const q = this.queueRunning;
 		const idx = q.findIndex(x => x.hash === hash);
 		if (idx == -1)
 			throw 'queue desync';
@@ -36,7 +36,7 @@ class Queue {
 	 * @param {*} hash Unique hash identifying the task
 	 */
 	end(hash) {
-		const me = this.dequeue(hash, this.queueRunning);
+		const me = this.dequeue(hash);
 		me.resolve();
 		/* Choose the next task to run and unblock its promise */
 		const q = this.getFirstWaiting();
@@ -62,7 +62,8 @@ class Queue {
 		/* Are we allowed to run? */
 		if (this.queueRunning.length >= this.maxConcurrent) {
 			/* This promise will be unlocked from the outside */
-			me.promise = new Promise((resolve, reject) => {
+			/* and it cannot reject */
+			me.promise = new Promise((resolve) => {
 				me.resolve = resolve;
 			});
 			/* Get in the line */
@@ -72,12 +73,12 @@ class Queue {
 		}
 
 		this.queueRunning.push(me);
-		me.promise = new Promise((resolve, reject) => {
+		me.promise = new Promise((resolve) => {
 			me.resolve = resolve;
 		});
 		/* Wait if it is too soon */
 		while (Date.now() - this.lastRun < this.minCycle) {
-			await new Promise((resolve, reject) => setTimeout(resolve, this.minCycle - Date.now() + this.lastRun));
+			await new Promise((resolve) => setTimeout(resolve, this.minCycle - Date.now() + this.lastRun));
 		}
 		this.lastRun = Date.now();
 	}
@@ -90,7 +91,7 @@ class Queue {
 			running: this.queueRunning.length,
 			waiting: Object.keys(this.queueWaiting).reduce((t, x) => (t += this.queueWaiting[x].length), 0),
 			last: this.lastRun
-		}
+		};
 	}
 
 	/**

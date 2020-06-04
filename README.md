@@ -88,7 +88,7 @@ async function downloadTheInternet() {
 	*/
 	try {
 		await download(site);
-	} catch () {
+	} catch (e) {
 		console.error(e);
 	} finally {
 		/* Signal that we are finished */
