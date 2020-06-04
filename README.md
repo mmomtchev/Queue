@@ -1,6 +1,10 @@
 # async/await-compatible Promise-based priority queues
 
-** Bare-bones implementation **
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Node.js CI](https://github.com/mmomtchev/Queue/workflows/Node.js%20CI/badge.svg)](https://github.com/mmomtchev/Queue/actions?query=workflow%3A%22Node.js+CI%22)
+[![codecov](https://codecov.io/gh/mmomtchev/Queue/branch/master/graph/badge.svg)](https://codecov.io/gh/mmomtchev/Queue)
+
+*Bare-bones implementation*
 
 This is an interesting solution to the priority queues problem.
 
