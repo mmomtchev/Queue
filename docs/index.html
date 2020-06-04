@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Home</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Home</h1>
+
+    
+
+
+
+    
+
+
+    <h3> </h3>
+
+
+
+
+
+
+
+
+
+
+    
+
+
+
+
+    <section>
+        <article><h1>async/await-compatible Promise-based priority queues</h1>
+<p><a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="License: MIT"></a>
+<a href="https://github.com/mmomtchev/Queue/actions?query=workflow%3A%22Node.js+CI%22"><img src="https://github.com/mmomtchev/Queue/workflows/Node.js%20CI/badge.svg" alt="Node.js CI"></a>
+<a href="https://codecov.io/gh/mmomtchev/Queue"><img src="https://codecov.io/gh/mmomtchev/Queue/branch/master/graph/badge.svg" alt="codecov"></a></p>
+<p><em>Bare-bones implementation</em></p>
+<p>This is an interesting solution to the priority queues problem.</p>
+<p>There are other Promise-based queues out there but they are not async/await compatible and do not support priorities.</p>
+<p>It guarantees order and never wakes up contexts that won't run.</p>
+<p>I use it with tens of thousands of jobs on the queue. <em>O(1)</em> on the number of jobs, <em>O(n)</em> on the number of different priorities, so be reasonable. Just make sure to awalys call .end().</p>
+<p>These can be used to rate-limit expensive external API requests.</p>
+<p>The queues keep references to the Promise resolve() function and resolve it from outside of the Promise constructor.
+This is a very unusual use of Promises to implement locks that I find interesting.
+The language specification doesn't make it clear if this is allowed or not, but it seems to work very well.
+It works both in the browser and in Node.js.</p>
+<p>Install:</p>
+<p><code>npm install --save async-await-queue</code></p>
+<p>Typical usae case:</p>
+<pre class="prettyprint source lang-js"><code>const Queue = require('async-await-queue');
+/* No more than 2 concurrent tasks with
+ * at least 100ms between two tasks
+ */
+myq = new Queue(2, 100);
+
+....
+
+const myPriority = -1;
+
+
+/* This function will launch tasks and will
+ * wait for them to be scheduled
+ */
+async function downloadTheInternet() {
+	let p;
+	for (let site of Internet) {
+		/* The third call will wait for the previous two to complete
+		* plus the time needed to make this at least 100ms
+		* after the second call
+		* The first argument needs to be unique for every
+		* task on the queue
+		*/
+		const me = Symbol();
+		/* We wait in the line here */
+		await myq.wait(me, myPriority);
+
+		/* Do your expensive async task here
+		* Queue will schedule it at
+		* no more than 2 parallel running requests
+		* launched at least 100ms apart
+		*/
+		p = download(site)
+			/* Signal that we are finished */
+			/* Do not forget to handle the exceptions! */
+			.catch((e) => console.error(e))
+			.then(() => myq.end(me));
+	}
+	return await p;
+}
+
+
+/* This function will execute a single task
+ * waiting for its place in the queue
+ */
+async function downloadTheInternet() {
+	let p;
+	/* The third call will wait for the previous two to complete
+	* plus the time needed to make this at least 100ms
+	* after the second call
+	* The first argument needs to be unique for every
+	* task on the queue
+	*/
+	const me = Symbol();
+	/* We wait in the line here */
+	await myq.wait(me, myPriority);
+
+	/* Do your expensive async task here
+	* Queue will schedule it at
+	* no more than 2 parallel running requests
+	* launched at least 100ms apart
+	*/
+	try {
+		await download(site);
+	} catch (e) {
+		console.error(e);
+	} finally {
+		/* Signal that we are finished */
+		/* Do not forget to handle the exceptions! */
+		myq.end(me);
+	}
+}
+
+
+/* This function will schedule all the taks and
+ * then will return immediately a single Promise
+ * that can be awaited upon
+ */
+async function downloadTheInternet() {
+	const q = [];
+	for (let site of Internet) {
+		/* The third call will wait for the previous two to complete
+		* plus the time needed to make this at least 100ms
+		* after the second call
+		* The first argument needs to be unique for every
+		* task on the queue
+		*/
+		const me = Symbol();
+		q.push(myq.wait(me, myPriority)
+			.then(() => download(site))
+			.catch((e) => console.error(e))
+			.then(() => myq.end(me)));
+		
+	}
+	return Promise.all(q);
+}
+</code></pre></article>
+    </section>
+
+
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Queue.html">Queue</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.4</a> on Thu Jun 04 2020 22:18:29 GMT+0200 (Central European Summer Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
