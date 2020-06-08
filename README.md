@@ -42,10 +42,10 @@ const myPriority = -1;
 
 
 /* This function will launch tasks and will
- * wait for them to be scheduled
+ * wait for them to be scheduled, returning
+ * only when all tasks have finished
  */
 async function downloadTheInternet() {
-	let p;
 	for (let site of Internet) {
 		/* The third call will wait for the previous two to complete
 		* plus the time needed to make this at least 100ms
@@ -62,13 +62,13 @@ async function downloadTheInternet() {
 		* no more than 2 parallel running requests
 		* launched at least 100ms apart
 		*/
-		p = download(site)
+		download(site)
 			/* Signal that we are finished */
 			/* Do not forget to handle the exceptions! */
 			.catch((e) => console.error(e))
 			.then(() => myq.end(me));
 	}
-	return await p;
+	return await myq.flush();
 }
 
 
