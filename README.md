@@ -66,7 +66,7 @@ async function downloadTheInternet() {
 			/* Signal that we are finished */
 			/* Do not forget to handle the exceptions! */
 			.catch((e) => console.error(e))
-			.then(() => myq.end(me));
+			.finally(() => myq.end(me));
 	}
 	return await myq.flush();
 }
@@ -121,8 +121,7 @@ async function downloadTheInternet() {
 		q.push(myq.wait(me, myPriority)
 			.then(() => download(site))
 			.catch((e) => console.error(e))
-			.then(() => myq.end(me)));
-		
+			.finally(() => myq.end(me)));
 	}
 	return Promise.all(q);
 }
