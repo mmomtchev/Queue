@@ -6,6 +6,8 @@
 
 *Bare-bones implementation*
 
+***zero-dependency*** if you are not rebuilding the minified versions yourself.
+
 This is an interesting solution to the priority queues problem.
 
 There are other Promise-based queues out there but they are not async/await compatible and do not support priorities.
@@ -26,6 +28,17 @@ It works both in the browser and in Node.js.
 `npm install --save async-await-queue`
 
 # Typical usage
+
+Require as CJS/UMD
+```js
+const Queue = require('async-await-queue');
+```
+
+Import as ES Module
+```js
+import Queue from 'async-await-queue';
+```
+
 
 (or read the [jsdoc](https://mmomtchev.github.io/Queue/))
 

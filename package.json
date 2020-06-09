@@ -2,16 +2,20 @@
   "name": "async-await-queue",
   "version": "1.0.7",
   "description": "async/await simple priority queues",
-  "main": "queue.js",
+  "main": "index.umd.min.js",
+  "module": "index.es.js",
   "scripts": {
     "test": "node test",
     "c8": "node_modules/.bin/c8 node test",
     "lcov": "node_modules/.bin/c8 report --reporter=text-lcov > coverage/tests.lcov",
     "codecov": "curl -s https://codecov.io/bash | env CODECOV_TOKEN='6f636bc8-8965-4251-9e52-6a9379878fa1' bash",
     "preversion": "npm test && eslint queue.js test.js",
-    "minify": "terser queue.js -o index.min.js",
+    "build:es": "node_modules/.bin/rollup -c rollup.config.js -f esm -o index.es.js -p 'terser={output: {beautify: true, indent_level: 2}}'",
+    "build:umd": "node_modules/.bin/rollup -c rollup.config.js -f umd -o index.umd.min.js -n default -p terser",
+    "build:test": "node_modules/.bin/rollup -c rollup.config.js -f umd -o index.umd.js -n default",
+    "build": "npm run build:es && npm run build:umd && npm run build:test",
     "doc": "jsdoc queue.js README.md -d docs",
-    "version": "npm run minify && npm run doc && git add package.json index.min.js docs",
+    "version": "npm run build && npm run doc && git add package.json index.min.js docs",
     "postversion": "git push && git push --tags"
   },
   "repository": {
@@ -30,5 +34,13 @@
   "bugs": {
     "url": "https://github.com/mmomtchev/Queue/issues"
   },
-  "homepage": "https://github.com/mmomtchev/Queue"
+  "homepage": "https://github.com/mmomtchev/Queue",
+  "devDependencies": {
+    "builtin-modules": "^3.1.0",
+    "c8": "^7.1.2",
+    "rollup": "^2.15.0",
+    "rollup-plugin-json": "^4.0.0",
+    "rollup-plugin-node-resolve": "^5.2.0",
+    "rollup-plugin-terser": "^6.1.0"
+  }
 }

@@ -1,4 +1,4 @@
-class Queue {
+export default class Queue {
 	/**
 	 * 
 	 * @param {number} _maxConcurrent Number of tasks allowed to run simultaneously
@@ -113,5 +113,3 @@ class Queue {
 		}
 	}
 }
-
-module.exports = Queue;

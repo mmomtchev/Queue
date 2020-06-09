@@ -1,4 +1,4 @@
-const Queue = require('./queue');
+const Queue = require('./index.umd.js');
 
 const testSequence = [ 
 	{ id: Symbol(0), prio: 5 },
