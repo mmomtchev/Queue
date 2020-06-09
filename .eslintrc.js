@@ -9,7 +9,8 @@ module.exports = {
         "eslint:recommended"
     ],
     parserOptions: {
-        ecmaVersion: 2017
+        ecmaVersion: 2017,
+        sourceType: "module"
     },
     rules: {
         quotes: ['error', 'single'],
