@@ -75,7 +75,6 @@
 				/* Get in the line */
 				this.queueWaiting[priority].push(me);
 				await me.promise;
-
 			}
 
 			this.queueRunning.push(me);
