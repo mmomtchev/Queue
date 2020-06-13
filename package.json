@@ -1,6 +1,6 @@
 {
   "name": "async-await-queue",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "async/await simple priority queues",
   "main": "index.umd.min.js",
   "module": "index.es.js",
