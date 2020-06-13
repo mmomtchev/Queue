@@ -1,8 +1,8 @@
 export default class Queue {
 	/**
 	 * 
-	 * @param {number} _maxConcurrent Number of tasks allowed to run simultaneously
-	 * @param {number} _minCycle Minimum number of milliseconds between two tasks
+	 * @param {number=} _maxConcurrent Number of tasks allowed to run simultaneously, default 1
+	 * @param {number=} _minCycle Minimum number of milliseconds between two tasks, default 0
 	 */
 	constructor(_maxConcurrent, _minCycle) {
 		this.maxConcurrent = _maxConcurrent || 1;
