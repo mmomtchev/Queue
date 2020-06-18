@@ -4,9 +4,9 @@
 [![Node.js CI](https://github.com/mmomtchev/Queue/workflows/Node.js%20CI/badge.svg)](https://github.com/mmomtchev/Queue/actions?query=workflow%3A%22Node.js+CI%22)
 [![codecov](https://codecov.io/gh/mmomtchev/Queue/branch/master/graph/badge.svg)](https://codecov.io/gh/mmomtchev/Queue)
 
-*Bare-bones implementation*
-
 ***zero-dependency*** if you are not rebuilding the minified versions yourself.
+
+There is a medium story about using this package to parallelize download loops : [Parallelizing download loops in JS with async-await-queue](https://medium.com/@mmomtchev/parallelizing-download-loops-in-js-with-async-await-queue-670420880cd6)
 
 This is an interesting solution to the priority queues problem.
 
@@ -29,12 +29,12 @@ It works both in the browser and in Node.js.
 
 # Typical usage
 
-Require as CJS/UMD
+Require as **CJS/UMD**
 ```js
 const Queue = require('async-await-queue');
 ```
 
-Import as ES Module
+Import as **ES Module**
 ```js
 import Queue from 'async-await-queue';
 ```
