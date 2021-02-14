@@ -43,3 +43,5 @@ jobs:
     - run: npm run c8
     - run: npm run lcov
     - run: npm run codecov
+      env:
+        CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}

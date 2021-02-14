@@ -8,7 +8,7 @@
     "test": "node test",
     "c8": "node_modules/.bin/c8 node test",
     "lcov": "node_modules/.bin/c8 report --reporter=text-lcov > coverage/tests.lcov",
-    "codecov": "curl -s https://codecov.io/bash | env CODECOV_TOKEN='6f636bc8-8965-4251-9e52-6a9379878fa1' bash",
+    "codecov": "curl -s https://codecov.io/bash | bash",
     "preversion": "npm test && eslint queue.js test.js",
     "build:es": "node_modules/.bin/rollup -c rollup.config.js -f esm -o index.es.js",
     "build:umd": "node_modules/.bin/rollup -c rollup.config.js -f umd -o index.umd.min.js -n default -p terser",
