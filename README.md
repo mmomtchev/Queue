@@ -54,7 +54,7 @@ const myq = new Queue(2, 100);
 const myPriority = -1;
 
 
-/* This function will launch tasks and will
+/* This function will launch all tasks and will
  * wait for them to be scheduled, returning
  * only when all tasks have finished
  */
@@ -84,8 +84,28 @@ async function downloadTheInternet() {
 	return await myq.flush();
 }
 
+/* This is the new style API introduced in 1.2
+ * It is equivalent to the last example
+ */
+async function downloadTheInternet() {
+	const q = [];
+	for (let site of Internet) {
+		/* The third call will wait for the previous two to complete
+		* plus the time needed to make this at least 100ms
+		* after the second call
+		* The first argument needs to be unique for every
+		* task on the queue
+		*/
+		q.push(myq.run(() =>
+			download(site)
+			.catch((e) => console.error(e))
+		);
+	}
+	return Promise.all(q);
+}
 
-/* This function will execute a single task
+
+/* This function will execute a single task at a time
  * waiting for its place in the queue
  */
 async function downloadTheInternet() {
@@ -138,4 +158,5 @@ async function downloadTheInternet() {
 	}
 	return Promise.all(q);
 }
+
 ```

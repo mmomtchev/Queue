@@ -1,8 +1,9 @@
 export default class Queue {
 	/**
+	 * Priority queue with rate limiting
 	 * 
-	 * @param {number=} _maxConcurrent Number of tasks allowed to run simultaneously, default 1
-	 * @param {number=} _minCycle Minimum number of milliseconds between two tasks, default 0
+	 * @param {number=1} _maxConcurrent Number of tasks allowed to run simultaneously
+	 * @param {number=0} _minCycle Minimum number of milliseconds between two consecutive tasks
 	 */
 	constructor(_maxConcurrent, _minCycle) {
 		this.maxConcurrent = _maxConcurrent || 1;
@@ -32,6 +33,8 @@ export default class Queue {
 	}
 
 	/**
+	 * Signal that the task `hash` has finished
+	 * Frees its slot in the queue
 	 * 
 	 * @param {*} hash Unique hash identifying the task
 	 */
@@ -47,6 +50,7 @@ export default class Queue {
 	}
 
 	/**
+	 * Wait for a slot in the queue
 	 * 
 	 * @param {*} hash Unique hash identifying the task
 	 * @param {number} priority
@@ -83,6 +87,19 @@ export default class Queue {
 	}
 
 	/**
+	 * Run a job (equivalent to calling Queue.wait(), job() and then Queue.end())
+	 * fn must be either a synchronous function, either a function that returns a Promise
+	 * 
+	 * @param {function} fn job
+	 * @param {number} priority
+	 * @returns {Promise} Resolved when the task has finished
+	 */
+	run(job, priority) {
+		const id = Symbol();
+		return this.wait(id, priority).then(() => job()).finally(() => this.end(id));
+	}
+
+	/**
 	 * @returns {object} running, waiting, last
 	 */
 	stat() {
@@ -94,7 +111,9 @@ export default class Queue {
 	}
 
 	/**
-	 * @returns {Promise} returns when the queue is empty
+	 * Returns a promise that resolves when the queue is empty
+	 * 
+	 * @returns {Promise}
 	 */
 	async flush() {
 		/* Aways wait on the lowest priority in the queue */
