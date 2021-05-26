@@ -4,7 +4,7 @@
 [![Node.js CI](https://github.com/mmomtchev/Queue/workflows/Node.js%20CI/badge.svg)](https://github.com/mmomtchev/Queue/actions?query=workflow%3A%22Node.js+CI%22)
 [![codecov](https://codecov.io/gh/mmomtchev/Queue/branch/master/graph/badge.svg)](https://codecov.io/gh/mmomtchev/Queue)
 
-***zero-dependency*** if you are not rebuilding the minified versions yourself.
+1726 bytes and ***zero-dependency*** if you are not rebuilding the minified versions yourself.
 
 There is a medium story about using this package to parallelize download loops : [Parallelizing download loops in JS with async-await-queue](https://medium.com/@mmomtchev/parallelizing-download-loops-in-js-with-async-await-queue-670420880cd6)
 
@@ -14,11 +14,11 @@ There are other Promise-based queues out there but they are not async/await comp
 
 It guarantees order and never wakes up contexts that won't run.
 
-I use it with tens of thousands of jobs on the queue. *O(1)* on the number of jobs, *O(n)* on the number of different priorities, so be reasonable. Just make sure to awalys call .end().
+I use it with tens of thousands of jobs on the queue. *O(1)* on the number of jobs, *O(n)* on the number of different priorities, so be reasonable. Just make sure to awalys call `Queue.end()`. Or, since 1.2, there is a safer, but less versatile method, `Queue.run()`.
 
 These can be used to rate-limit expensive external API requests.
 
-The queues keep references to the Promise resolve() function and resolve it from outside of the Promise constructor.
+The queues keep references to the Promise `resolve()` function and resolve it from outside of the Promise constructor.
 This is a very unusual use of Promises to implement locks that I find interesting.
 The language specification doesn't make it clear if this is allowed or not, but it seems to work very well.
 It works both in the browser and in Node.js.
@@ -41,6 +41,11 @@ import Queue from 'async-await-queue';
 
 
 (or read the [jsdoc](https://mmomtchev.github.io/Queue/))
+
+```ts
+import { Queue } from '../Queue';
+```
+
 
 ```js
 const Queue = require('async-await-queue');

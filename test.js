@@ -1,11 +1,12 @@
 const Queue = require('./index.umd.js');
+const assert = require('assert');
 
 const testSequence = [
 	{ id: Symbol(0), prio: 5 },
 	{ id: Symbol(1), prio: 5 },
 	{ id: Symbol(2), prio: 5 },
 	{ id: Symbol(3), prio: 5 },
-	{ id: Symbol(4), prio: 0 },
+	{ id: Symbol(4) },
 ];
 
 /* The correct order of execution should be 0, 1, 4, 2, 3 */
@@ -28,9 +29,9 @@ const correctOrder = [
 /* Style 1 -> call wait, do your job, then call end */
 async function test1() {
 	const testOrder = [];
-	let q = new Queue(2, 500);
+	const q = new Queue(2, 500);
 
-	for (let test of testSequence) {
+	for (const test of testSequence) {
 		q.wait(test.id, test.prio).then(() => {
 			setTimeout(() => {
 				console.log(test.id, q.stat());
@@ -46,18 +47,19 @@ async function test1() {
 /* Style 2 -> call run and pass a function */
 async function test2() {
 	const testOrder = [];
-	let q = new Queue(2, 500);
+	const q = new Queue(2, 500);
 
-	for (let test of testSequence)
+	for (const test of testSequence)
 		q.run(() => {
 			return new Promise((res) => {
 				setTimeout(() => {
 					console.log(test.id, q.stat());
 					testOrder.push({ id: test.id });
-					res();
+					res(test.id);
 				}, 1000)
 			})
 		}, test.prio)
+		.then((r) => assert(r === test.id))
 
 	await q.flush();
 	return testOrder;
@@ -67,10 +69,7 @@ async function test2() {
 	for (const testfn of [test1, test2]) {
 		console.log(testfn.name);
 		const testOrder = await testfn();
-		for (let ti in correctOrder)
-			if (correctOrder[ti].id !== testOrder[ti].id) {
-				console.error(`test failed for sequence ${ti}, should be `, correctOrder[ti].id, ' is ', testOrder[ti].id);
-				throw new Error('test1 failed');
-			}
+		for (const ti in correctOrder)
+			assert(correctOrder[ti].id === testOrder[ti].id)
 	}
 })();

@@ -6,10 +6,13 @@
 
 	class Queue {
 		/**
+		 * @class Queue
 		 * Priority queue with rate limiting
+		 * See the medium article:
+		 * https://mmomtchev.medium.com/parallelizing-download-loops-in-js-with-async-await-queue-670420880cd6
 		 * 
-		 * @param {number=1} _maxConcurrent Number of tasks allowed to run simultaneously
-		 * @param {number=0} _minCycle Minimum number of milliseconds between two consecutive tasks
+		 * @param {number} [_maxConcurrent=1] Number of tasks allowed to run simultaneously
+		 * @param {number} [_minCycle=0] Minimum number of milliseconds between two consecutive tasks
 		 */
 		constructor(_maxConcurrent, _minCycle) {
 			this.maxConcurrent = _maxConcurrent || 1;
@@ -42,7 +45,8 @@
 		 * Signal that the task `hash` has finished
 		 * Frees its slot in the queue
 		 * 
-		 * @param {*} hash Unique hash identifying the task
+		 * @method end
+		 * @param {any} hash Unique hash identifying the task, Symbol() works very well
 		 */
 		end(hash) {
 			const me = this.dequeue(hash);
@@ -58,11 +62,13 @@
 		/**
 		 * Wait for a slot in the queue
 		 * 
-		 * @param {*} hash Unique hash identifying the task
-		 * @param {number} priority
-		 * @returns {Promise} Resolved when the task is ready to run
+		 * @method wait
+		 * @param {any} hash Unique hash identifying the task
+		 * @param {number} [priority=0] Optional priority, -1 is higher priority than 1
+		 * @return {Promise<void>} Resolved when the task is ready to run
 		 */
-		async wait(hash, priority) {
+		async wait(hash, _priority) {
+			const priority = _priority === undefined ? 0 : _priority;
 			/* Us on the queue */
 			let me = { hash, priority };
 			/* Create priorities on the fly */
@@ -96,17 +102,31 @@
 		 * Run a job (equivalent to calling Queue.wait(), job() and then Queue.end())
 		 * fn must be either a synchronous function, either a function that returns a Promise
 		 * 
-		 * @param {function} fn job
-		 * @param {number} priority
-		 * @returns {Promise} Resolved when the task has finished
+		 * @method run<T>
+		 * @param {() => T|Promise<T>} fn The job
+		 * @param {number} [priority=0] Optional priority, -1 is higher priority than 1
+		 * @return {Promise<T>} Resolved when the task has finished with the return value of fn
 		 */
-		run(job, priority) {
+		run(job, _priority) {
+			const priority = _priority === undefined ? 0 : _priority;
 			const id = Symbol();
-			return this.wait(id, priority).then(() => job()).finally(() => this.end(id));
+			return this.wait(id, priority)
+				.then(() => job())
+				.finally((r) => {
+					this.end(id);
+					return r;
+				});
 		}
 
 		/**
-		 * @returns {object} running, waiting, last
+		 * @interface QueueStats {running: {number}, waiting: {number}, last: {number}}
+		 */
+
+		/**
+		 * Return the number of running and waiting jobs
+		 * 
+		 * @method stat
+		 * @return {QueueStats} running, waiting, last
 		 */
 		stat() {
 			return {
@@ -119,7 +139,8 @@
 		/**
 		 * Returns a promise that resolves when the queue is empty
 		 * 
-		 * @returns {Promise}
+		 * @method flush
+		 * @return {Promise<void>}
 		 */
 		async flush() {
 			/* Aways wait on the lowest priority in the queue */
