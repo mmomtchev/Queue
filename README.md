@@ -42,11 +42,6 @@ import Queue from 'async-await-queue';
 
 (or read the [jsdoc](https://mmomtchev.github.io/Queue/))
 
-```ts
-import { Queue } from '../Queue';
-```
-
-
 ```js
 const Queue = require('async-await-queue');
 /* No more than 2 concurrent tasks with

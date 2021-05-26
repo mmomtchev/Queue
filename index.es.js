@@ -94,7 +94,8 @@ class Queue {
 
 	/**
 	 * Run a job (equivalent to calling Queue.wait(), job() and then Queue.end())
-	 * fn must be either a synchronous function, either a function that returns a Promise
+	 *
+	 * fn can be both synchronous or asynchronous function
 	 * 
 	 * @method run<T>
 	 * @param {() => T|Promise<T>} fn The job
