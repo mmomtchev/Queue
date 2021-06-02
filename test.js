@@ -56,10 +56,10 @@ async function test2() {
 					console.log(test.id, q.stat());
 					testOrder.push({ id: test.id });
 					res(test.id);
-				}, 1000)
-			})
+				}, 1000);
+			});
 		}, test.prio)
-		.then((r) => assert(r === test.id))
+		.then((r) => assert(r === test.id));
 
 	await q.flush();
 	return testOrder;
@@ -70,6 +70,6 @@ async function test2() {
 		console.log(testfn.name);
 		const testOrder = await testfn();
 		for (const ti in correctOrder)
-			assert(correctOrder[ti].id === testOrder[ti].id)
+			assert(correctOrder[ti].id === testOrder[ti].id);
 	}
 })();
