@@ -7,8 +7,9 @@
 	class Queue {
 		/**
 		 * @class Queue
-		 * Priority queue with rate limiting
-		 * See the medium article:
+		 * 
+		 * Priority queue with rate limiting<br>
+		 * See the medium article:<br>
 		 * https://mmomtchev.medium.com/parallelizing-download-loops-in-js-with-async-await-queue-670420880cd6
 		 * 
 		 * @param {number} [_maxConcurrent=1] Number of tasks allowed to run simultaneously
@@ -42,7 +43,7 @@
 		}
 
 		/**
-		 * Signal that the task `hash` has finished
+		 * Signal that the task `hash` has finished.<br>
 		 * Frees its slot in the queue
 		 * 
 		 * @method end
@@ -99,14 +100,13 @@
 		}
 
 		/**
-		 * Run a job (equivalent to calling Queue.wait(), job() and then Queue.end())
-		 *
+		 * Run a job (equivalent to calling Queue.wait(), fn() and then Queue.end())<br>
 		 * fn can be both synchronous or asynchronous function
 		 * 
-		 * @method run<T>
-		 * @param {() => T|Promise<T>} fn The job
+		 * @method run
+		 * @param {Function} fn The job
 		 * @param {number} [priority=0] Optional priority, -1 is higher priority than 1
-		 * @return {Promise<T>} Resolved when the task has finished with the return value of fn
+		 * @return {Promise<any>} Resolved when the task has finished with the return value of fn
 		 */
 		run(job, _priority) {
 			const priority = _priority === undefined ? 0 : _priority;
