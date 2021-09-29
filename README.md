@@ -93,8 +93,6 @@ async function downloadTheInternet() {
 		/* The third call will wait for the previous two to complete
 		* plus the time needed to make this at least 100ms
 		* after the second call
-		* The first argument needs to be unique for every
-		* task on the queue
 		*/
 		q.push(myq.run(() =>
 			download(site)
