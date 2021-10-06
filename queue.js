@@ -107,9 +107,8 @@ export default class Queue {
 		const id = Symbol();
 		return this.wait(id, priority)
 			.then(() => job())
-			.finally((r) => {
+			.finally(() => {
 				this.end(id);
-				return r;
 			});
 	}
 
