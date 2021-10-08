@@ -42,6 +42,8 @@ import Queue from 'async-await-queue';
 
 (or read the [jsdoc](https://mmomtchev.github.io/Queue/))
 
+***IMPORTANT*** Keep in mind that when running asynchronous code without explicitly `await`ing it, you should always handle the eventual Promise rejections by a `.catch()` statement.
+
 ```js
 const Queue = require('async-await-queue');
 /* No more than 2 concurrent tasks with
