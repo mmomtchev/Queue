@@ -36,7 +36,7 @@
   },
   "homepage": "https://github.com/mmomtchev/Queue",
   "devDependencies": {
-    "builtin-modules": "^3.1.0",
+    "builtin-modules": "^3.2.0",
     "c8": "^7.1.2",
     "eslint": "^7.27.0",
     "jsdoc": "^3.6.7",
