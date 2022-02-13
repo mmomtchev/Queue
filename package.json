@@ -39,7 +39,7 @@
     "builtin-modules": "^3.2.0",
     "c8": "^7.11.0",
     "eslint": "^7.32.0",
-    "jsdoc": "^3.6.7",
+    "jsdoc": "^3.6.9",
     "rollup": "^2.65.0",
     "rollup-plugin-json": "^4.0.0",
     "rollup-plugin-node-resolve": "^5.2.0",
