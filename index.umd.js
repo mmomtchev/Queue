@@ -1,8 +1,8 @@
 (function (global, factory) {
 	typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
 	typeof define === 'function' && define.amd ? define(factory) :
-	(global = global || self, global.default = factory());
-}(this, (function () { 'use strict';
+	(global = typeof globalThis !== 'undefined' ? globalThis : global || self, global["default"] = factory());
+})(this, (function () { 'use strict';
 
 	class Queue {
 		/**
@@ -113,14 +113,13 @@
 			const id = Symbol();
 			return this.wait(id, priority)
 				.then(() => job())
-				.finally((r) => {
+				.finally(() => {
 					this.end(id);
-					return r;
 				});
 		}
 
 		/**
-		 * @interface QueueStats {running: {number}, waiting: {number}, last: {number}}
+		 * @interface QueueStats {running: number, waiting: number, last: number}
 		 */
 
 		/**
@@ -162,4 +161,4 @@
 
 	return Queue;
 
-})));
+}));
