@@ -1,4 +1,4 @@
-export interface QueueStats {running: {number}, waiting: {number}, last: {number}}
+export interface QueueStats {running: number, waiting: number, last: number}
 
 export class Queue {
 /**

@@ -113,7 +113,7 @@ export default class Queue {
 	}
 
 	/**
-	 * @interface QueueStats {running: {number}, waiting: {number}, last: {number}}
+	 * @interface QueueStats {running: number, waiting: number, last: number}
 	 */
 
 	/**
