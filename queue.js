@@ -21,8 +21,8 @@ export default class Queue {
 	dequeue(hash) {
 		const q = this.queueRunning;
 		const idx = q.findIndex(x => x.hash === hash);
-		if (idx == -1)
-			throw 'queue desync';
+		if (idx === -1)
+			throw 'queue desync';  // eslint-disable-line no-throw-literal
 		const o = q[idx];
 		q.splice(idx, 1);
 		return o;
@@ -67,7 +67,7 @@ export default class Queue {
 		/* Us on the queue */
 		let me = { hash, priority };
 		/* Create priorities on the fly */
-		if (this.queueWaiting[priority] == undefined)
+		if (this.queueWaiting[priority] === undefined)
 			this.queueWaiting[priority] = [];
 
 		/* Are we allowed to run? */
