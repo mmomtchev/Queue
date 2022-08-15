@@ -14,6 +14,7 @@ export default class Queue {
 		this.minCycle = _minCycle || 0;
 		this.queueRunning = [];
 		this.queueWaiting = {};
+		this.numRunning = 0;
 		this.lastRun = 0;
 	}
 
@@ -25,6 +26,7 @@ export default class Queue {
 			throw 'queue desync';  // eslint-disable-line no-throw-literal
 		const o = q[idx];
 		q.splice(idx, 1);
+		/* We don't decrement 'numRunning' here; that's done elsewhere */
 		return o;
 	}
 
@@ -51,6 +53,17 @@ export default class Queue {
 		if (q !== undefined) {
 			const next = q.shift();
 			next.resolve();
+
+			/* We don't decrement 'numRunning' here, because if we did then there would be a time window
+			when numRunning < maxConcurrent; that time window would last until wait() wakes up and adds
+			the next task to 'queueRunning'. If someone were to add a new task to the queue during this
+			time window then we would mistakenly start running the new task immediately, making it jump
+			ahead of all of the waiting tasks.
+			Therefore, we leave it to the wait() function to decrement 'numRunning'. */
+		}
+		else {
+			/* We're not waking up the wait() function, so we need to decrement 'numRunning' ourselves */
+			--this.numRunning;
 		}
 	}
 
@@ -71,7 +84,7 @@ export default class Queue {
 			this.queueWaiting[priority] = [];
 
 		/* Are we allowed to run? */
-		if (this.queueRunning.length >= this.maxConcurrent) {
+		if (this.numRunning >= this.maxConcurrent) {
 			/* This promise will be unlocked from the outside */
 			/* and it cannot reject */
 			me.promise = new Promise((resolve) => {
@@ -80,9 +93,12 @@ export default class Queue {
 			/* Get in the line */
 			this.queueWaiting[priority].push(me);
 			await me.promise;
+			/* We get here when a *different* task has finished running; it happens when end() calls next.resolve() */
+			--this.numRunning;
 		}
 
 		this.queueRunning.push(me);
+		++this.numRunning;
 		me.promise = new Promise((resolve) => {
 			me.resolve = resolve;
 		});
@@ -124,7 +140,7 @@ export default class Queue {
 	 */
 	stat() {
 		return {
-			running: this.queueRunning.length,
+			running: this.numRunning,
 			waiting: Object.keys(this.queueWaiting).reduce((t, x) => (t += this.queueWaiting[x].length), 0),
 			last: this.lastRun
 		};
