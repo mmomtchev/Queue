@@ -40,7 +40,7 @@
     "c8": "^7.12.0",
     "eslint": "^7.32.0",
     "jsdoc": "^3.6.11",
-    "rollup": "^2.77.3",
+    "rollup": "^2.78.0",
     "rollup-plugin-json": "^4.0.0",
     "rollup-plugin-node-resolve": "^5.2.0",
     "rollup-plugin-terser": "^6.1.0",
