@@ -3,14 +3,15 @@ module.exports = {
         browser: true,
         commonjs: true,
         es6: true,
-        node: true
+        node: true,
+        mocha: true
     },
     extends: [
-        "eslint:recommended"
+        'eslint:recommended'
     ],
     parserOptions: {
         ecmaVersion: 2017,
-        sourceType: "module"
+        sourceType: 'module'
     },
     rules: {
         quotes: ['error', 'single'],

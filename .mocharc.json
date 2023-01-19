@@ -1,0 +1,5 @@
+{
+  "spec": "test/*.test.[tj]s",
+  "reporter": "tap",
+  "timeout": 10000
+}
