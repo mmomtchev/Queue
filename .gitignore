@@ -1,2 +1,6 @@
 coverage
 node_modules
+index.d.ts
+index.es.mjs
+index.umd.js
+index.umd.min.js
