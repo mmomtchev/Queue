@@ -1,6 +1,7 @@
 export default class Queue {
 	/**
 	 * @class Queue
+	 * @exports export=Queue
 	 * 
 	 * Priority queue with rate limiting<br>
 	 * See the medium article:<br>

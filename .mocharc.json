@@ -1,5 +1,6 @@
 {
   "spec": "test/*.test.*s",
+  "require": "ts-node/register",
   "reporter": "tap",
   "timeout": 10000
 }
