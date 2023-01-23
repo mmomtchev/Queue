@@ -29,14 +29,14 @@ It works both in the browser and in Node.js.
 
 # Typical usage
 
-Require as **CJS/UMD**
+Require as **CJS**
 ```js
-const Queue = require('async-await-queue');
+const { Queue } = require('async-await-queue');
 ```
 
 Import as **ES Module**
 ```js
-import Queue from 'async-await-queue';
+import { Queue } from 'async-await-queue';
 ```
 
 

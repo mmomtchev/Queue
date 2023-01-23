@@ -7,7 +7,9 @@ module.exports = {
         mocha: true
     },
     extends: [
-        'eslint:recommended'
+        'eslint:recommended',
+        'plugin:@typescript-eslint/eslint-recommended',
+        'plugin:@typescript-eslint/recommended'
     ],
     parserOptions: {
         ecmaVersion: 2017,
