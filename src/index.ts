@@ -5,8 +5,8 @@ import { PriorityQueue } from 'typescript-collections';
 const debug = process?.env?.QUEUE_DEBUG ? console.debug.bind(console) : () => undefined;
 
 // This is the central part of the concept:
-// using a Promise<void> as a mutex
-interface Mutex {
+// using a Promise<void> as a semaphore
+interface Semaphore {
   wait: Promise<void>;
   signal: () => void;
 }
@@ -15,13 +15,13 @@ interface JobWaiting<T> {
   hash: T;
   prio: number;
   counter: number;
-  start: Mutex;
+  start: Semaphore;
 }
 
 interface JobRunning<T> {
   hash: T;
   prio: number;
-  finish: Mutex;
+  finish: Semaphore;
 }
 
 export interface QueueStats {
@@ -29,7 +29,6 @@ export interface QueueStats {
   waiting: number;
   last: number;
 }
-
 
 function prioCompare<T>(a: JobWaiting<T>, b: JobWaiting<T>) {
   return b.prio - a.prio || b.counter - a.counter;
@@ -91,7 +90,7 @@ export class Queue<T = unknown> {
         const finishWait = new Promise<void>((resolve) => {
           finishSignal = resolve;
         });
-        const finish = { wait: finishWait, signal: finishSignal } as Mutex;
+        const finish = { wait: finishWait, signal: finishSignal } as Semaphore;
         const nextRunning = { hash: next.hash, prio: next.prio, finish } as JobRunning<T>;
         this.queueRunning.set(next.hash, nextRunning);
         this.lastRun = Date.now();
