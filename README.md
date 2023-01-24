@@ -6,7 +6,7 @@
 [![Node.js CI](https://github.com/mmomtchev/Queue/workflows/Node.js%20CI/badge.svg)](https://github.com/mmomtchev/Queue/actions?query=workflow%3A%22Node.js+CI%22)
 [![codecov](https://codecov.io/gh/mmomtchev/Queue/branch/master/graph/badge.svg)](https://codecov.io/gh/mmomtchev/Queue)
 
-Total size, including `typescript-collections/PriorityQueue.js`: **`6.6Kbytes` uncompressed, `2.2KBytes` gzip-compressed**
+Zero-dependency, total size: **`4 KBytes` uncompressed and `1.5 KBytes` gzip-compressed**
 
 There is a medium story about using this package to parallelize download loops : [Parallelizing download loops in JS with async-await-queue](https://medium.com/@mmomtchev/parallelizing-download-loops-in-js-with-async-await-queue-670420880cd6)
 
@@ -37,7 +37,6 @@ Require as **CJS**
 const { Queue } = require('async-await-queue');
 ```
 
-Import as **ES Module**
 Import as **ES6 Module**
 ```js
 import { Queue } from 'async-await-queue';

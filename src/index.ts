@@ -1,4 +1,4 @@
-import { PriorityQueue } from 'typescript-collections';
+import { Heap } from './heap';
 
 // This will be optimized away by V8 as I have proven in
 // https://bugs.chromium.org/p/v8/issues/detail?id=12756
@@ -27,21 +27,21 @@ interface JobRunning<T> {
 /**
  * @type QueueStats {running: number, waiting: number, last: number}
  */
-export interface QueueStats {
+interface QueueStats {
   running: number;
   waiting: number;
   last: number;
 }
 
 function prioCompare<T>(a: JobWaiting<T>, b: JobWaiting<T>) {
-  return b.prio - a.prio || b.counter - a.counter;
+  return a.prio - b.prio || a.counter - b.counter;
 }
 
 export class Queue<T = unknown> {
   maxConcurrent: number;
   minCycle: number;
   queueRunning: Map<T, JobRunning<T>>;
-  queueWaiting: PriorityQueue<JobWaiting<T>>;
+  queueWaiting: Heap<JobWaiting<T>>;
   lastRun: number;
   nextTimer: Promise<void> | null;
   counter: number;
@@ -61,7 +61,7 @@ export class Queue<T = unknown> {
     this.maxConcurrent = maxConcurrent || 1;
     this.minCycle = minCycle || 0;
     this.queueRunning = new Map<T, JobRunning<T>>;
-    this.queueWaiting = new PriorityQueue<JobWaiting<T>>(prioCompare);
+    this.queueWaiting = new Heap<JobWaiting<T>>(prioCompare);
     this.lastRun = 0;
     this.nextTimer = null;
     this.counter = 0;
@@ -86,7 +86,7 @@ export class Queue<T = unknown> {
       }
     } else {
       /* Choose the next task to run and unblock its promise */
-      const next = this.queueWaiting.dequeue();
+      const next = this.queueWaiting.pop();
       debug('wont throttle', this.lastRun % 1000, Date.now() % 1000, 'next is ', next?.hash);
       if (next !== undefined) {
         let finishSignal;
@@ -145,7 +145,7 @@ export class Queue<T = unknown> {
     const meWaiting: JobWaiting<T> = { hash, prio, start: { signal, wait }, counter: this.counter++ };
 
     /* Get in the line */
-    this.queueWaiting.enqueue(meWaiting);
+    this.queueWaiting.push(meWaiting);
     this.tryRun();
     await wait;
 
@@ -207,5 +207,3 @@ export class Queue<T = unknown> {
     }
   }
 }
-
-export default Queue;

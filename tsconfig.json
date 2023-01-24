@@ -1,0 +1,10 @@
+{
+  "include": ["src/index.ts"],
+  "exclude": [],
+  "compilerOptions": {
+    "lib": [
+      "es2017"
+    ],
+    "target": "es2017"
+  }
+}
