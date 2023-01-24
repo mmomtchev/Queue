@@ -8,9 +8,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [2.0.0] 2023-01-19
 - Almost complete rewrite in TypeScript
 - Use `PriorityQueue` from `typescript-collection`
-- O(1) in all cases
+- O(log(n)) in all cases
 - Switch to mocha and test CJS/ES6/TS
 - Many bugs and edge cases fixed
+- The preferred way to import is now via the named export but the default export is still there
+- 2.0.0 can lead to a slightly different execution order when using different priorities, throttling and concurrency-limiting at the same time - the new order is the correct one
 
 ### [1.2.1] 2021-04-05
  - Fix [#37](https://github.com/mmomtchev/Queue/issues/37) TypeScript definitions for `QueueStats`
