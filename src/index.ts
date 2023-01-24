@@ -209,3 +209,5 @@ export class Queue<T = unknown> {
     }
   }
 }
+
+export default Queue;
