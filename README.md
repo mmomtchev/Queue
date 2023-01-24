@@ -20,7 +20,6 @@ These can be used to rate-limit expensive external API requests.
 
 The queues keep references to the Promise `resolve()` function and resolve it from outside of the Promise constructor.
 This is a very unusual use of Promises to implement locks that I find interesting.
-The language specification doesn't make it clear if this is allowed or not, but it seems to work very well.
 It works both in the browser and in Node.js.
 
 # Install
