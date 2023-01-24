@@ -18,25 +18,10 @@ export class Heap<T> {
   _limit = 0;
 
   /**
-   * Alias of add
-   */
-  offer = this.add;
-
-  /**
-   * Alias of peek
-   */
-  element = this.peek;
-
-  /**
-   * Alias of pop
-   */
-  poll = this.pop;
-
-  /**
    * Heap instance constructor.
    * @param  {Function} compare Optional comparison function, defaults to Heap.minComparator<number>
    */
-  constructor(public compare: Comparator<T> = Heap.minComparator) { }
+  constructor(public compare: Comparator<T>) { }
 
   /*
             Static methods
@@ -77,21 +62,6 @@ export class Heap<T> {
     return idx + whichChildren;
   }
 
-  /**
-   * Min heap comparison function, default.
-   * @param  {any} a     First element
-   * @param  {any} b     Second element
-   * @return {Number}    0 if they're equal, positive if `a` goes up, negative if `b` goes up
-   */
-  static minComparator<N>(a: N, b: N): number {
-    if (a > b) {
-      return 1;
-    } else if (a < b) {
-      return -1;
-    } else {
-      return 0;
-    }
-  }
 
   /**
    * Max heap comparison function.
