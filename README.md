@@ -1,4 +1,6 @@
-# async/await-compatible Promise-based priority queues
+# async-await-queue 
+
+**Promise-based priority queues for throttling, rate- and concurrency limiting of Node.js tasks**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Node.js CI](https://github.com/mmomtchev/Queue/workflows/Node.js%20CI/badge.svg)](https://github.com/mmomtchev/Queue/actions?query=workflow%3A%22Node.js+CI%22)
@@ -16,11 +18,12 @@ It guarantees order and never wakes up contexts that won't run.
 
 I use it with tens of thousands of jobs on the queue. _O(log(n))_ on the number of jobs, _O(log(n))_ on the number of different priorities. Just make sure to always call `Queue.end()`. Or, since 1.2, there is a safer, but less versatile method, `Queue.run()`.
 
-These can be used to rate-limit expensive external API requests.
+Typical uses:
+ * Rate-limit expensive external API requests - especially on ban-happy servers
+ * Avoiding to launch all the tasks in an async loop at the same time while allowing some degree of controlled concurrency
 
 The queues keep references to the Promise `resolve()` function and resolve it from outside of the Promise constructor.
-This is a very unusual use of Promises to implement locks that I find interesting.
-It works both in the browser and in Node.js.
+This is a very unusual use of Promises to implement locks that I find interesting (this is what the medium story is about).
 
 # Install
 
@@ -35,7 +38,7 @@ const { Queue } = require('async-await-queue');
 ```
 
 Import as **ES Module**
-
+Import as **ES6 Module**
 ```js
 import { Queue } from 'async-await-queue';
 ```
@@ -65,7 +68,8 @@ const myPriority = -1;
  */
 async function downloadTheInternet() {
   for (let site of Internet) {
-    /** The third call will wait for the previous two to complete
+    /**
+     * The third call will wait for the previous two to complete
      * plus the time needed to make this at least 100ms
      * after the second call
      * The first argument needs to be unique for every
