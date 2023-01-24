@@ -42,150 +42,6 @@
 
 
 
-    <section>
-        <article><h1>async/await-compatible Promise-based priority queues</h1>
-<p><a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="License: MIT"></a>
-<a href="https://github.com/mmomtchev/Queue/actions?query=workflow%3A%22Node.js+CI%22"><img src="https://github.com/mmomtchev/Queue/workflows/Node.js%20CI/badge.svg" alt="Node.js CI"></a>
-<a href="https://codecov.io/gh/mmomtchev/Queue"><img src="https://codecov.io/gh/mmomtchev/Queue/branch/master/graph/badge.svg" alt="codecov"></a></p>
-<p>1726 bytes and <em><strong>zero-dependency</strong></em> if you are not rebuilding the minified versions yourself.</p>
-<p>There is a medium story about using this package to parallelize download loops : <a href="https://medium.com/@mmomtchev/parallelizing-download-loops-in-js-with-async-await-queue-670420880cd6">Parallelizing download loops in JS with async-await-queue</a></p>
-<p>This is an interesting solution to the priority queues problem.</p>
-<p>There are other Promise-based queues out there but they are not async/await compatible and do not support priorities.</p>
-<p>It guarantees order and never wakes up contexts that won't run.</p>
-<p>I use it with tens of thousands of jobs on the queue. <em>O(1)</em> on the number of jobs, <em>O(n)</em> on the number of different priorities, so be reasonable. Just make sure to awalys call <code>Queue.end()</code>. Or, since 1.2, there is a safer, but less versatile method, <code>Queue.run()</code>.</p>
-<p>These can be used to rate-limit expensive external API requests.</p>
-<p>The queues keep references to the Promise <code>resolve()</code> function and resolve it from outside of the Promise constructor.
-This is a very unusual use of Promises to implement locks that I find interesting.
-The language specification doesn't make it clear if this is allowed or not, but it seems to work very well.
-It works both in the browser and in Node.js.</p>
-<h1>Install</h1>
-<p><code>npm install --save async-await-queue</code></p>
-<h1>Typical usage</h1>
-<p>Require as <strong>CJS/UMD</strong></p>
-<pre class="prettyprint source lang-js"><code>const Queue = require('async-await-queue');
-</code></pre>
-<p>Import as <strong>ES Module</strong></p>
-<pre class="prettyprint source lang-js"><code>import Queue from 'async-await-queue';
-</code></pre>
-<p>(or read the <a href="https://mmomtchev.github.io/Queue/">jsdoc</a>)</p>
-<p><em><strong>IMPORTANT</strong></em> Keep in mind that when running asynchronous code without explicitly <code>await</code>ing it, you should always handle the eventual Promise rejections by a <code>.catch()</code> statement.</p>
-<pre class="prettyprint source lang-js"><code>const Queue = require('async-await-queue');
-/* No more than 2 concurrent tasks with
- * at least 100ms between two tasks
- */
-const myq = new Queue(2, 100);
-
-....
-
-const myPriority = -1;
-
-
-/* This function will launch all tasks and will
- * wait for them to be scheduled, returning
- * only when all tasks have finished
- */
-async function downloadTheInternet() {
-	for (let site of Internet) {
-		/* The third call will wait for the previous two to complete
-		* plus the time needed to make this at least 100ms
-		* after the second call
-		* The first argument needs to be unique for every
-		* task on the queue
-		*/
-		const me = Symbol();
-		/* We wait in the line here */
-		await myq.wait(me, myPriority);
-
-		/* Do your expensive async task here
-		* Queue will schedule it at
-		* no more than 2 parallel running requests
-		* launched at least 100ms apart
-		*/
-		download(site)
-			/* Signal that we are finished */
-			/* Do not forget to handle the exceptions! */
-			.catch((e) => console.error(e))
-			.finally(() => myq.end(me));
-	}
-	return await myq.flush();
-}
-
-/* This is the new style API introduced in 1.2
- * It is equivalent to the last example
- */
-async function downloadTheInternet() {
-	const q = [];
-	for (let site of Internet) {
-		/* The third call will wait for the previous two to complete
-		* plus the time needed to make this at least 100ms
-		* after the second call
-		*/
-		q.push(myq.run(() =>
-			download(site)
-			.catch((e) => console.error(e))
-		);
-	}
-	return Promise.all(q);
-}
-
-
-/* This function will execute a single task at a time
- * waiting for its place in the queue
- */
-async function downloadTheInternet() {
-	let p;
-	/* The third call will wait for the previous two to complete
-	* plus the time needed to make this at least 100ms
-	* after the second call
-	* The first argument needs to be unique for every
-	* task on the queue
-	*/
-	const me = Symbol();
-	/* We wait in the line here */
-	await myq.wait(me, myPriority);
-
-	/* Do your expensive async task here
-	* Queue will schedule it at
-	* no more than 2 parallel running requests
-	* launched at least 100ms apart
-	*/
-	try {
-		await download(site);
-	} catch (e) {
-		console.error(e);
-	} finally {
-		/* Signal that we are finished */
-		/* Do not forget to handle the exceptions! */
-		myq.end(me);
-	}
-}
-
-
-/* This function will schedule all the taks and
- * then will return immediately a single Promise
- * that can be awaited upon
- */
-async function downloadTheInternet() {
-	const q = [];
-	for (let site of Internet) {
-		/* The third call will wait for the previous two to complete
-		* plus the time needed to make this at least 100ms
-		* after the second call
-		* The first argument needs to be unique for every
-		* task on the queue
-		*/
-		const me = Symbol();
-		q.push(myq.wait(me, myPriority)
-			.then(() => download(site))
-			.catch((e) => console.error(e))
-			.finally(() => myq.end(me)));
-	}
-	return Promise.all(q);
-}
-
-</code></pre></article>
-    </section>
-
 
 
 
@@ -194,13 +50,13 @@ async function downloadTheInternet() {
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="module.exports_module.exports.html">exports</a></li></ul><h3>Interfaces</h3><ul><li><a href="QueueStats.html">QueueStats</a></li></ul><h3>Global</h3><ul><li><a href="global.html#end">end</a></li><li><a href="global.html#flush">flush</a></li><li><a href="global.html#run">run</a></li><li><a href="global.html#stat">stat</a></li><li><a href="global.html#wait">wait</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Interfaces</h3><ul><li><a href="QueueStats.html">QueueStats</a></li></ul><h3>Global</h3><ul><li><a href="global.html#end">end</a></li><li><a href="global.html#flush">flush</a></li><li><a href="global.html#run">run</a></li><li><a href="global.html#stat">stat</a></li><li><a href="global.html#wait">wait</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.7</a> on Tue Apr 05 2022 14:45:49 GMT+0200 (Central European Summer Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.11</a> on Tue Jan 24 2023 19:51:53 GMT+0100 (Central European Standard Time)
 </footer>
 
 <script> prettyPrint(); </script>

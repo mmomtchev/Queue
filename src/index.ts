@@ -24,6 +24,9 @@ interface JobRunning<T> {
   finish: Semaphore;
 }
 
+/**
+ * @type QueueStats {running: number, waiting: number, last: number}
+ */
 export interface QueueStats {
   running: number;
   waiting: number;
@@ -168,11 +171,6 @@ export class Queue<T = unknown> {
         this.end(id as T);
       });
   }
-
-
-  /**
-   * @interface QueueStats {running: number, waiting: number, last: number}
-   */
 
   /**
    * Return the number of running and waiting jobs

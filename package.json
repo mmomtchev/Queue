@@ -14,7 +14,7 @@
     "build:es": "tsc --outDir es6 -d --sourceMap -m es6 -moduleResolution node src/index.ts && mv es6/index.d.ts index.d.ts && mv es6/index.js es6/index.mjs",
     "build:cjs": "tsc --outDir cjs --sourceMap  -m commonjs -moduleResolution node src/index.ts && mv cjs/index.js cjs/index.cjs",
     "build": "npm run build:es && npm run build:cjs",
-    "doc": "jsdoc queue.js README.md -d docs",
+    "doc": "jsdoc -c .jsdoc.json es6/index.mjs -d docs",
     "version": "npm run build && npm run doc && git add package.json docs",
     "postversion": "git push && git push --tags"
   },
