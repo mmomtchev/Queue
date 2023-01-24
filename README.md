@@ -1,6 +1,6 @@
 # async-await-queue 
 
-**Promise-based priority queues for throttling, rate- and concurrency limiting of Node.js tasks**
+**Promise-based priority queues for throttling, rate- and concurrency limiting of Node.js or browser tasks**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Node.js CI](https://github.com/mmomtchev/Queue/workflows/Node.js%20CI/badge.svg)](https://github.com/mmomtchev/Queue/actions?query=workflow%3A%22Node.js+CI%22)
