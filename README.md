@@ -3,10 +3,11 @@
 **Promise-based priority queues for throttling, rate- and concurrency limiting of Node.js or browser tasks**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![npm version](https://img.shields.io/npm/v/async-await-queue)](https://www.npmjs.com/package/async-await-queue)
 [![Node.js CI](https://github.com/mmomtchev/Queue/workflows/Node.js%20CI/badge.svg)](https://github.com/mmomtchev/Queue/actions?query=workflow%3A%22Node.js+CI%22)
 [![codecov](https://codecov.io/gh/mmomtchev/Queue/branch/master/graph/badge.svg)](https://codecov.io/gh/mmomtchev/Queue)
 
-Zero-dependency, total size: **`3.41 kB` uncompressed and `1.33 kB` gzip-compressed**
+Zero-dependency, total size: **`3.09 kB` uncompressed and `1.22 kB` gzip-compressed**
 
 There is a medium story about using this package to parallelize download loops : [Parallelizing download loops in JS with async-await-queue](https://medium.com/@mmomtchev/parallelizing-download-loops-in-js-with-async-await-queue-670420880cd6)
 
