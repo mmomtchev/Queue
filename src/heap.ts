@@ -49,56 +49,6 @@ export class Heap<T> {
     return Math.floor((idx - whichChildren) / 2);
   }
 
-  /**
-   * Gets sibling index for given index.
-   * @param  {Number} idx  Children index
-   * @return {Number | undefined}      Sibling index, -1 if idx is 0
-   */
-  static getSiblingIndexOf(idx: number): number {
-    if (idx <= 0) {
-      return -1;
-    }
-    const whichChildren = idx % 2 ? 1 : -1;
-    return idx + whichChildren;
-  }
-
-
-  /**
-   * Max heap comparison function.
-   * @param  {any} a     First element
-   * @param  {any} b     Second element
-   * @return {Number}    0 if they're equal, positive if `a` goes up, negative if `b` goes up
-   */
-  static maxComparator<N>(a: N, b: N): number {
-    if (b > a) {
-      return 1;
-    } else if (b < a) {
-      return -1;
-    } else {
-      return 0;
-    }
-  }
-
-  /**
-   * Min number heap comparison function, default.
-   * @param  {Number} a     First element
-   * @param  {Number} b     Second element
-   * @return {Number}    0 if they're equal, positive if `a` goes up, negative if `b` goes up
-   */
-  static minComparatorNumber(a: number, b: number): number {
-    return a - b;
-  }
-
-  /**
-   * Max number heap comparison function.
-   * @param  {Number} a     First element
-   * @param  {Number} b     Second element
-   * @return {Number}    0 if they're equal, positive if `a` goes up, negative if `b` goes up
-   */
-  static maxComparatorNumber(a: number, b: number): number {
-    return b - a;
-  }
-
   /*
             Instance methods
    */
@@ -145,37 +95,12 @@ export class Heap<T> {
     return this.compare;
   }
 
-
-  /**
-   * Initialise a heap, sorting nodes
-   * @param  {Array} array Optional initial state array
-   */
-  init(array?: Array<T>): void {
-    if (array) {
-      this.heapArray = [...array];
-    }
-    for (let i = Math.floor(this.heapArray.length); i >= 0; --i) {
-      this._sortNodeDown(i);
-    }
-  }
-
   /**
    * Test if the heap has no elements.
    * @return {Boolean} True if no elements on the heap
    */
   isEmpty(): boolean {
     return this.length() === 0;
-  }
-
-  /**
-   * Get the leafs of the tree (no children nodes)
-   */
-  leafs(): Array<T> {
-    if (this.heapArray.length === 0) {
-      return [];
-    }
-    const pi = Heap.getParentIndexOf(this.heapArray.length - 1);
-    return this.heapArray.slice(pi + 1);
   }
 
   /**
@@ -242,14 +167,6 @@ export class Heap<T> {
     return this.length();
   }
 
-
-  /**
-   * Returns the inverse to the comparison function.
-   * @return {Function}
-   */
-  _invertedCompare = (a: T, b: T): number => {
-    return -1 * this.compare(a, b);
-  };
 
   /**
    * Move a node to a new index, switching places

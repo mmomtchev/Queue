@@ -8,7 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [2.1.0]
 - Builtin ultra-light heap implementation from [`heap-js`](https://github.com/ignlg/heap-js) by @ignlg
 - Drop the default export
-- Size down to 1.5KBytes when compressed
+- Size down to 1.3KBytes when compressed
+- Now ships transpiled to ES2017 (aka ES8) (as it supposes that you have `async`/`await`)
 
 # [2.0.0] 2023-01-19
 - Almost complete rewrite in TypeScript
