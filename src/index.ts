@@ -95,6 +95,9 @@ export class Queue<T = unknown> {
         });
         const finish = { wait: finishWait, signal: finishSignal } as Semaphore;
         const nextRunning = { hash: next.hash, prio: next.prio, finish } as JobRunning<T>;
+        if (this.queueRunning.has(next.hash)) {
+          throw new Error(`async-await-queue: duplicate hash ${next.hash}`);
+        }
         this.queueRunning.set(next.hash, nextRunning);
         this.lastRun = Date.now();
 
@@ -114,7 +117,7 @@ export class Queue<T = unknown> {
     debug(hash, 'end');
     const me = this.queueRunning.get(hash);
     if (me === undefined)
-      throw new Error('queue desync');
+      throw new Error(`async-await-queue: queue desync for ${hash}`);
 
     this.queueRunning.delete(hash);
     me.finish.signal();
