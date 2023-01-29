@@ -1,6 +1,6 @@
 {
   "name": "async-await-queue",
-  "version": "2.1.1-git.0",
+  "version": "2.1.1",
   "description": "async/await simple priority queues",
   "main": "cjs/index.cjs",
   "module": "es6/index.mjs",
