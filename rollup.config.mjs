@@ -11,10 +11,10 @@ export default [
       sourcemap: true
     },
     plugins: [
-      /*modify({
+      modify({
         find: /debug\(.*\);?/,
         replace: ''
-      }),*/
+      }),
       typescript(),
       terser()
     ]
@@ -27,10 +27,10 @@ export default [
       sourcemap: true
     },
     plugins: [
-      /*modify({
+      modify({
         find: /debug\(.*\);?/,
         replace: ''
-      }),*/
+      }),
       typescript(),
       terser()
     ]
