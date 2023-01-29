@@ -71,8 +71,8 @@ export class Queue<T = unknown> {
    * @private
    */
   tryRun(): void {
-    debug('tryRun');
-    while (this.queueWaiting.peek() && this.queueRunning.size < this.maxConcurrent) {
+    debug(`tryRun: waiting=${this.queueWaiting.size()}, running=${this.queueRunning.size}`);
+    while (this.queueWaiting.size() > 0 && this.queueRunning.size < this.maxConcurrent) {
       /* Wait if it is too soon */
       if (Date.now() - this.lastRun < this.minCycle) {
         debug(`will throttle, now=${Date.now() % 1000}, next=${(this.minCycle + this.lastRun) % 1000}, elapsed=${Date.now() - this.lastRun}`);
@@ -88,7 +88,7 @@ export class Queue<T = unknown> {
 
       /* Choose the next task to run and unblock its promise */
       const next = this.queueWaiting.pop();
-      debug(`wont throttle, last=${this.lastRun % 1000}, now=${Date.now() % 1000}, next is ${next?.hash}`);
+      debug(`wont throttle, last=${this.lastRun % 1000}, now=${Date.now() % 1000}, next is`, next?.hash);
       if (next !== undefined) {
         let finishSignal;
         const finishWait = new Promise<void>((resolve) => {
@@ -97,7 +97,7 @@ export class Queue<T = unknown> {
         const finish = { wait: finishWait, signal: finishSignal } as Semaphore;
         const nextRunning = { hash: next.hash, prio: next.prio, finish } as JobRunning<T>;
         if (this.queueRunning.has(next.hash)) {
-          throw new Error(`async-await-queue: duplicate hash ${next.hash}`);
+          throw new Error('async-await-queue: duplicate hash ' + next.hash);
         }
         this.queueRunning.set(next.hash, nextRunning);
         this.lastRun = Date.now();
@@ -118,7 +118,7 @@ export class Queue<T = unknown> {
     debug(hash, 'end');
     const me = this.queueRunning.get(hash);
     if (me === undefined)
-      throw new Error(`async-await-queue: queue desync for ${hash}`);
+      throw new Error('async-await-queue: queue desync for ' + hash);
 
     this.queueRunning.delete(hash);
     me.finish.signal();
@@ -154,7 +154,7 @@ export class Queue<T = unknown> {
     await wait;
 
     this.lastRun = Date.now();
-    debug(`will run ${hash} last=${this.lastRun % 1000}, now=${Date.now() % 1000}`);
+    debug('will run', hash, `last=${this.lastRun % 1000}, now=${Date.now() % 1000}`);
   }
 
   /**
