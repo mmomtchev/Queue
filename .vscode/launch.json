@@ -4,11 +4,21 @@
 		{
 			"type": "node",
 			"request": "launch",
-			"name": "Launch test",
+			"name": "Launch mocha",
 			"skipFiles": [
 				"<node_internals>/**"
 			],
-			"program": "${workspaceFolder}/test.js"
+			"program": "${workspaceFolder}/node_modules/mocha/lib/cli/cli.js"
+		},
+		{
+			"type": "node",
+			"request": "launch",
+			"name": "Launch test",
+			"runtimeExecutable": "ts-node",
+			"skipFiles": [
+				"<node_internals>/**"
+			],
+			"program": "${workspaceFolder}/test/stress.ts"
 		}
 	]
 }

@@ -72,22 +72,23 @@ export class Queue<T = unknown> {
    */
   tryRun(): void {
     debug('tryRun');
-    this.nextTimer = null;
-    if (!this.queueWaiting.peek() || this.queueRunning.size >= this.maxConcurrent) return;
-
-    /* Wait if it is too soon */
-    if (Date.now() - this.lastRun < this.minCycle) {
-      debug('will throttle', Date.now() % 1000, (this.minCycle + this.lastRun) % 1000, Date.now() - this.lastRun);
-      if (this.nextTimer === null) {
-        this.nextTimer = new Promise((resolve) => setTimeout(() => {
-          this.tryRun();
-          resolve();
-        }, this.minCycle - Date.now() + this.lastRun));
+    while (this.queueWaiting.peek() && this.queueRunning.size < this.maxConcurrent) {
+      /* Wait if it is too soon */
+      if (Date.now() - this.lastRun < this.minCycle) {
+        debug(`will throttle, now=${Date.now() % 1000}, next=${(this.minCycle + this.lastRun) % 1000}, elapsed=${Date.now() - this.lastRun}`);
+        if (this.nextTimer === null) {
+          this.nextTimer = new Promise((resolve) => setTimeout(() => {
+            this.nextTimer = null;
+            this.tryRun();
+            resolve();
+          }, this.minCycle - Date.now() + this.lastRun));
+        }
+        return;
       }
-    } else {
+
       /* Choose the next task to run and unblock its promise */
       const next = this.queueWaiting.pop();
-      debug('wont throttle', this.lastRun % 1000, Date.now() % 1000, 'next is ', next?.hash);
+      debug(`wont throttle, last=${this.lastRun % 1000}, now=${Date.now() % 1000}, next is ${next?.hash}`);
       if (next !== undefined) {
         let finishSignal;
         const finishWait = new Promise<void>((resolve) => {
@@ -153,7 +154,7 @@ export class Queue<T = unknown> {
     await wait;
 
     this.lastRun = Date.now();
-    debug(hash, 'will run', this.lastRun % 1000, Date.now() % 1000);
+    debug(`will run ${hash} last=${this.lastRun % 1000}, now=${Date.now() % 1000}`);
   }
 
   /**
@@ -191,6 +192,8 @@ export class Queue<T = unknown> {
 
   /**
    * Returns a promise that resolves when the queue is empty
+   * (or there are no more than <maxWaiting> waiting tasks
+   * if the argument is provided)
    * 
    * @method flush
    * @return {Promise<void>}

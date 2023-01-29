@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### [2.1.1]
 - Raise an exception when trying to add a task with an already existing id (instead of failing when trying to run it)
+- Ability to dequeue multiple tasks when scheduling (fixes not reaching the maximum concurrency limit when the cool down is very low but more than zero)
 
 ## [2.1.0] 2023-01-25
 - Builtin ultra-light heap implementation from [`heap-js`](https://github.com/ignlg/heap-js) by @ignlg
