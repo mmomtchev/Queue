@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-### [2.1.1]
+### [2.1.1] 2023-01-30
 - Raise an exception when trying to add a task with an already existing id (instead of failing when trying to run it)
 - Ability to dequeue multiple tasks when scheduling (fixes not reaching the maximum concurrency limit when the cool down is very low but more than zero)
 - Ability to wait until there are only X tasks waiting in the queue (for throttling when enqueuing)
