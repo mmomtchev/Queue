@@ -22,10 +22,10 @@ async function stress(opts: StressOpts) {
     if (me % opts.echo == 0) {
       if (process.env.MOCHA_ECHO) console.log('- scheduled', me);
     }
-    /*if (q.stat().waiting > opts.echo * 2) {
+    if (q.stat().waiting > opts.echo * 2) {
       if (process.env.MOCHA_ECHO) console.log('- throttling');
-      await q.flush();
-    }*/
+      await q.flush(opts.echo / 2);
+    }
     q.wait(me, 0).then(() => {
       concurrency++;
       if (concurrency > opts.concurrency) {

@@ -198,13 +198,15 @@ export class Queue<T = unknown> {
    * @method flush
    * @return {Promise<void>}
    */
-  async flush(): Promise<void> {
+  async flush(maxWaiting?: number): Promise<void> {
     debug('flush', this.stat());
     while (this.queueRunning.size > 0 || this.queueWaiting.size() > 0) {
       const waiting = this.queueWaiting.peek();
       if (waiting) {
         await waiting.start.wait;
       }
+      if (maxWaiting !== undefined && this.queueWaiting.size() < maxWaiting)
+        return;
       if (this.queueRunning.size > 0) {
         const running = this.queueRunning.values().next().value as JobRunning<T>;
         await running.finish.wait;
