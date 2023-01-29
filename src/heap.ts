@@ -59,49 +59,14 @@ export class Heap<T> {
    * @param {any} element Element to be added
    * @return {Boolean} true
    */
-  add(element: T): boolean {
+  push(element: T): boolean {
     this._sortNodeUp(this.heapArray.push(element) - 1);
     return true;
   }
 
-  /**
-   * Adds an array of elements to the heap.
-   * Similar as: push(element, element, ...).
-   * @param {Array} elements Elements to be added
-   * @return {Boolean} true
-   */
-  addAll(elements: Array<T>): boolean {
-    let i = this.length();
-    this.heapArray.push(...elements);
-    for (const l = this.length(); i < l; ++i) {
-      this._sortNodeUp(i);
-    }
-    return true;
-  }
 
 
-  /**
-   * Remove all of the elements from this heap.
-   */
-  clear(): void {
-    this.heapArray = [];
-  }
 
-  /**
-   * Returns the comparison function.
-   * @return {Function}
-   */
-  comparator(): Comparator<T> {
-    return this.compare;
-  }
-
-  /**
-   * Test if the heap has no elements.
-   * @return {Boolean} True if no elements on the heap
-   */
-  isEmpty(): boolean {
-    return this.length() === 0;
-  }
 
   /**
    * Length of the heap.
@@ -130,21 +95,6 @@ export class Heap<T> {
       return this.replace(last);
     }
     return last;
-  }
-
-  /**
-   * Pushes element(s) to the heap.
-   * @param  {...any} elements Elements to insert
-   * @return {Boolean} True if elements are present
-   */
-  push(...elements: Array<T>): boolean {
-    if (elements.length < 1) {
-      return false;
-    } else if (elements.length === 1) {
-      return this.add(elements[0]);
-    } else {
-      return this.addAll(elements);
-    }
   }
 
   /**
