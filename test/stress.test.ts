@@ -53,15 +53,15 @@ async function stress(opts: StressOpts) {
 
 describe('stress test', () => {
   it('limit by cool down', (done) => {
-    // 200 tasks
-    // one task every 5ms
+    // 1000 tasks
+    // one task every 1ms
     // => 1s
     const start = Date.now();
     stress({
-      concurrency: 200,
-      delay: 100,
-      cycle: 5,
-      total: 200,
+      concurrency: 100,
+      delay: 10,
+      cycle: 1,
+      total: 1000,
       echo: 10
     })
       .then(() => {
@@ -75,21 +75,21 @@ describe('stress test', () => {
   });
 
   it('limit by concurrency', (done) => {
-    // 200 tasks
-    // 10 tasks in parallel, each one of 100ms
-    // => 100 tasks per second
-    // => 2s
+    // 500 tasks
+    // 50 tasks in parallel, each one of 100ms
+    // => 500 tasks per second
+    // => 1s
     const start = Date.now();
     stress({
-      concurrency: 10,
+      concurrency: 50,
       delay: 100,
       cycle: 1,
-      total: 200,
+      total: 500,
       echo: 50
     })
       .then(() => {
         const elapsed = Date.now() - start;
-        if (Math.abs(elapsed - 2000) < 250)
+        if (Math.abs(elapsed - 1000) < 250)
           done();
         else
           done(`elapsed time does not match, expected 2000ms, got ${elapsed}ms`);
