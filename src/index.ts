@@ -2,7 +2,8 @@ import { Heap } from './heap';
 
 // This will be optimized away by V8 as I have proven in
 // https://bugs.chromium.org/p/v8/issues/detail?id=12756
-const debug = process?.env?.QUEUE_DEBUG ? console.debug.bind(console) : () => undefined;
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const debug = (..._) => undefined;
 
 // This is the central part of the concept:
 // using a Promise<void> as a semaphore

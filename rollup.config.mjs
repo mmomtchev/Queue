@@ -28,8 +28,8 @@ export default [
     },
     plugins: [
       modify({
-        find: /debug\(.*\);?/,
-        replace: ''
+        find: /debug\((.*\));?/,
+        replace: (_, expr) => process?.env?.QUEUE_DEBUG ? `console.debug(${expr});` : ''
       }),
       typescript(),
       terser()
