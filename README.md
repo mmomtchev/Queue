@@ -183,3 +183,12 @@ async function downloadTheInternet() {
   return Promise.all(q);
 }
 ```
+
+# Unresolvable `Promise`s in Node.js
+
+When using this package, something that you should be aware of is that Node.js has a very particular behavior when dealing with unresolvable `Promise`s:
+https://github.com/nodejs/node/issues/43162
+
+**When `await`ing an unresolvable `Promise`, Node.js will simply exit - instead of blocking indefinitely - which would probably be what most people expect.**
+
+If you are using this package in Node.js and it seems to simply unexpectedly exit without reaching the program's normal end and without reporting any errors, you most probably have an unresolvable `Promise`.
