@@ -10,10 +10,10 @@ describe('TS import', () => {
 
     q.wait(Symbol(), 0);
 
-    const s: Promise<symbol> = q.run(() => Symbol());
+    const s: Promise<symbol> = q.run(() => Promise.resolve(Symbol()));
     assert.instanceOf(s, Promise<symbol>);
 
-    const t: Promise<symbol> = q.run(() => Symbol(), 12);
+    const t: Promise<symbol> = q.run(() => Promise.resolve(Symbol()), 12);
     assert.instanceOf(t, Promise<symbol>);
   });
 
@@ -23,10 +23,10 @@ describe('TS import', () => {
 
     q.wait(Symbol() as unknown, 0);
 
-    const s: Promise<symbol> = q.run(() => Symbol());
+    const s: Promise<symbol> = q.run(() => Promise.resolve(Symbol()));
     assert.instanceOf(s, Promise<symbol>);
 
-    const t: Promise<symbol> = q.run(() => Symbol(), 12);
+    const t: Promise<symbol> = q.run(() => Promise.resolve(Symbol()), 12);
     assert.instanceOf(t, Promise<symbol>);
   });
 });
