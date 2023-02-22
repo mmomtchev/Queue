@@ -167,7 +167,7 @@ export class Queue<T = unknown> {
    * @param {number} [priority=0] Optional priority, -1 is higher priority than 1
    * @return {Promise<any>} Resolved when the task has finished with the return value of fn
    */
-  run<U>(job: () => U, priority?: number): Promise<U> {
+  run<U>(job: () => Promise<U>, priority?: number): Promise<U> {
     const prio = priority ?? 0;
     const id = Symbol();
     return this.wait(id as T, prio)
