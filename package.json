@@ -48,7 +48,6 @@
     "eslint": "^7.32.0",
     "jsdoc": "^3.6.11",
     "mocha": "^10.2.0",
-    "npm": "^9.3.1",
     "rollup": "^3.10.1",
     "rollup-plugin-modify": "^3.0.0",
     "ts-node": "^10.9.1",
