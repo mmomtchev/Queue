@@ -11,9 +11,9 @@
     "lcov": "node_modules/.bin/c8 report --reporter=text-lcov > coverage/tests.lcov",
     "codecov": "curl -s https://codecov.io/bash | bash",
     "preversion": "npm test && eslint src/* test/*",
-    "build": "rollup -c && tsc --emitDeclarationOnly -d --declarationDir . src/index.ts",
+    "prepare": "rollup -c && tsc --emitDeclarationOnly -d --declarationDir . src/index.ts",
     "doc": "jsdoc -c .jsdoc.json es6/index.mjs -d docs",
-    "version": "npm run build && npm run doc && git add package.json docs",
+    "version": "npm run prepare && npm run doc && git add package.json docs",
     "postversion": "git push && git push --tags"
   },
   "repository": {
