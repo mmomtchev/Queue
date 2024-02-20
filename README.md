@@ -26,6 +26,8 @@ Typical uses:
 The queues keep references to the Promise `resolve()` function and resolve it from outside of the Promise constructor.
 This is a very unusual use of Promises to implement locks that I find interesting (this is what the medium story is about).
 
+2024 Update: My technique is on track to become an official ECMAScript language: [ES Promise.withResolvers](https://tc39.es/proposal-promise-with-resolvers/)
+
 # Install
 
 `npm install --save async-await-queue`
