@@ -47,7 +47,7 @@
     "chai-as-promised": "^7.1.1",
     "eslint": "^8.56.0",
     "jsdoc": "^4.0.2",
-    "mocha": "^10.2.0",
+    "mocha": "^11.0.1",
     "rollup": "^4.9.6",
     "rollup-plugin-modify": "^3.0.0",
     "ts-node": "^10.9.2",
