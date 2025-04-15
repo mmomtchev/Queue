@@ -23,6 +23,7 @@ jobs:
         node-version: ${{ matrix.node-version }}
     - run: npm ci
     - run: npm run build -if-present
+    - run: npx eslint src/*.ts
     - run: npm test
 
   codecov:
