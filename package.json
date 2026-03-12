@@ -45,7 +45,7 @@
     "@types/node": "^25.0.0",
     "@typescript-eslint/eslint-plugin": "^8.30.1",
     "@typescript-eslint/parser": "^8.30.1",
-    "c8": "^10.1.1",
+    "c8": "^11.0.0",
     "chai": "^4.4.0",
     "chai-as-promised": "^7.1.1",
     "eslint": "^10.0.0",
