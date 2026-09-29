@@ -15,7 +15,9 @@ export default [
         find: /debug\(.*\);?/,
         replace: ''
       }),
-      typescript(),
+      typescript({
+        "exclude": ["./test/*"]
+      }),
       terser()
     ]
   },
@@ -31,7 +33,9 @@ export default [
         find: /debug\((.*\));?/,
         replace: (_, expr) => process?.env?.QUEUE_DEBUG ? `console.debug(${expr});` : ''
       }),
-      typescript(),
+      typescript({
+        "exclude": ["./test/*"]
+      }),
       terser()
     ]
   }

@@ -3,7 +3,7 @@ import { Heap } from './heap';
 // This will be optimized away by V8 as I have proven in
 // https://bugs.chromium.org/p/v8/issues/detail?id=12756
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-const debug = (..._) => undefined;
+const debug = (..._: unknown[]) => undefined;
 
 // This is the central part of the concept:
 // using a Promise<void> as a semaphore
@@ -91,7 +91,7 @@ export class Queue<T = unknown> {
       const next = this.queueWaiting.pop();
       debug(`wont throttle, last=${this.lastRun % 1000}, now=${Date.now() % 1000}, next is`, next?.hash);
       if (next !== undefined) {
-        let finishSignal;
+        let finishSignal = (() => undefined) as (() => void);
         const finishWait = new Promise<void>((resolve) => {
           finishSignal = resolve;
         });
@@ -142,7 +142,7 @@ export class Queue<T = unknown> {
     /* Are we allowed to run? */
     /* This promise will be unlocked from the outside */
     /* and it cannot reject */
-    let signal;
+    let signal = (() => undefined) as (() => void);
     const wait = new Promise<void>((resolve) => {
       signal = resolve;
     });
